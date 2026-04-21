@@ -1,0 +1,57 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrate
+  namespace: production
+  labels:
+    app: devops-demo
+    component: migration
+spec:
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: devops-demo
+        component: migration
+    spec:
+      serviceAccountName: devops-demo-app
+      restartPolicy: OnFailure
+      containers:
+        - name: migrate
+          image: 283800772211.dkr.ecr.us-east-1.amazonaws.com/devops-demo-app:latest
+          command: ["node", "src/db-migrate.js"]
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_SSL
+              value: "true"
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: DB_NAME
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"

@@ -1,0 +1,36 @@
+{
+  "name": "devops-demo-app",
+  "version": "1.0.0",
+  "description": "Simple Node.js app for DevOps assignment demo",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --forceExit --detectOpenHandles",
+    "test:coverage": "jest --coverage --forceExit --detectOpenHandles",
+    "lint": "eslint src/**/*.js"
+  },
+  "dependencies": {
+    "express": "4.18.2",
+    "pg": "8.11.3",
+    "dotenv": "16.3.1",
+    "winston": "3.11.0",
+    "express-prometheus-middleware": "1.2.0",
+    "prom-client": "13.2.0",
+    "helmet": "7.1.0",
+    "cors": "2.8.5",
+    "uuid": "9.0.0"
+  },
+  "devDependencies": {
+    "jest": "29.7.0",
+    "supertest": "6.3.4",
+    "eslint": "8.56.0",
+    "nodemon": "3.0.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.js"
+    ]
+  }
+}

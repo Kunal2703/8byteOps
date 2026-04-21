@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>DevOps Dashboard — Octa Byte AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#03070f;
+  --bg1:#070e1c;
+  --bg2:#0b1628;
+  --bg3:#0f1e36;
+  --bg4:#152240;
+  --border:#1a2d4a;
+  --border2:#1f3560;
+  --text:#f0f4ff;
+  --muted:#4a6080;
+  --muted2:#7a95b8;
+  --blue:#3b82f6;
+  --blue2:#60a5fa;
+  --cyan:#06b6d4;
+  --green:#10b981;
+  --red:#ef4444;
+  --yellow:#f59e0b;
+  --purple:#8b5cf6;
+  --pink:#ec4899;
+  --r:14px;
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── Background ── */
+.bg-grid{
+  position:fixed;inset:0;z-index:0;
+  background-image:
+    linear-gradient(rgba(59,130,246,.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,.04) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0}
+.orb1{width:700px;height:700px;background:radial-gradient(circle,#1d4ed8 0%,transparent 70%);top:-300px;left:-200px;opacity:.35}
+.orb2{width:600px;height:600px;background:radial-gradient(circle,#0e7490 0%,transparent 70%);bottom:-200px;right:-150px;opacity:.3}
+.orb3{width:400px;height:400px;background:radial-gradient(circle,#6d28d9 0%,transparent 70%);top:45%;left:55%;opacity:.18}
+
+/* ── Navbar ── */
+nav{
+  position:sticky;top:0;z-index:200;
+  background:rgba(3,7,15,.8);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;
+  padding:0 1.5rem;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:.75rem;text-decoration:none}
+.brand-logo{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,#1d4ed8,#06b6d4);
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;
+  box-shadow:0 0 20px rgba(59,130,246,.4);
+}
+.brand-text{font-weight:800;font-size:1rem;color:var(--text)}
+.brand-sub{font-size:.7rem;color:var(--muted2);font-weight:400;margin-top:1px}
+.nav-center{display:flex;gap:.25rem}
+.nav-link{
+  color:var(--muted2);text-decoration:none;
+  font-size:.8rem;font-weight:500;
+  padding:.4rem .85rem;border-radius:8px;
+  transition:all .15s;
+}
+.nav-link:hover{color:var(--text);background:var(--bg3)}
+.live-badge{
+  display:flex;align-items:center;gap:.5rem;
+  font-size:.75rem;font-weight:700;
+  color:#10b981;
+  background:rgba(16,185,129,.1);
+  border:1px solid rgba(16,185,129,.25);
+  border-radius:20px;padding:.3rem .9rem;
+}
+.live-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:#10b981;
+  animation:livepulse 2s infinite;
+}
+@keyframes livepulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(16,185,129,.5)}50%{opacity:.6;box-shadow:0 0 0 5px rgba(16,185,129,0)}}
+
+/* ── Wrapper ── */
+.wrap{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:2rem 1.5rem 5rem}
+
+/* ── Hero ── */
+.hero{text-align:center;padding:3rem 0 2.5rem}
+.hero-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--cyan);
+  background:rgba(6,182,212,.08);
+  border:1px solid rgba(6,182,212,.2);
+  border-radius:20px;padding:.35rem 1rem;margin-bottom:1.5rem;
+}
+.hero h1{
+  font-size:clamp(2.2rem,5vw,3.8rem);
+  font-weight:900;line-height:1.1;
+  margin-bottom:1rem;
+  letter-spacing:-.02em;
+}
+.hero h1 .w1{
+  background:linear-gradient(135deg,#fff 0%,#94a3b8 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero h1 .w2{
+  background:linear-gradient(135deg,var(--blue) 0%,var(--cyan) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-sub{color:var(--muted2);font-size:.95rem;max-width:520px;margin:0 auto 2rem;line-height:1.7}
+
+/* ── Stack pills ── */
+.pills{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem}
+.pill{
+  display:flex;align-items:center;gap:.45rem;
+  font-size:.75rem;font-weight:600;
+  padding:.3rem .9rem;border-radius:20px;
+  border:1px solid var(--border2);background:var(--bg2);
+  color:var(--muted2);transition:all .2s;cursor:default;
+}
+.pill:hover{border-color:var(--blue);color:var(--text);transform:translateY(-2px);box-shadow:0 4px 15px rgba(59,130,246,.15)}
+.pill-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* ── Section label ── */
+.sec-label{
+  font-size:.7rem;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--muted);
+  margin-bottom:.85rem;display:flex;align-items:center;gap:.5rem;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ── Status grid ── */
+.status-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:1rem;margin-bottom:2rem;
+}
+@media(max-width:900px){.status-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.status-grid{grid-template-columns:repeat(2,1fr)}}
+
+.scard{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  padding:1.1rem 1.2rem;
+  position:relative;overflow:hidden;
+  transition:border-color .2s,transform .2s;
+  cursor:default;
+}
+.scard:hover{border-color:var(--border2);transform:translateY(-3px)}
+.scard::after{
+  content:'';position:absolute;
+  inset:0;border-radius:var(--r);
+  background:linear-gradient(135deg,rgba(59,130,246,.04),transparent);
+  pointer-events:none;
+}
+.scard-icon{font-size:1.5rem;margin-bottom:.6rem}
+.scard-label{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.scard-val{font-size:1rem;font-weight:700;margin-top:.25rem}
+.scard-val.ok{color:var(--green)}
+.scard-val.err{color:var(--red)}
+.scard-val.info{color:var(--cyan)}
+.scard-val.loading{color:var(--muted);animation:shimmer 1.5s infinite}
+@keyframes shimmer{0%,100%{opacity:.5}50%{opacity:1}}
+.scard-sub{font-size:.7rem;color:var(--muted);margin-top:.2rem;font-family:'JetBrains Mono',monospace}
+
+/* ── Main layout ── */
+.main-grid{
+  display:grid;
+  grid-template-columns:1fr 360px;
+  gap:1.5rem;align-items:start;
+}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+/* ── Card ── */
+.card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  overflow:hidden;
+  transition:border-color .2s;
+}
+.card:hover{border-color:var(--border2)}
+.card-head{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.9rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(90deg,var(--bg3),var(--bg2));
+}
+.card-title{
+  display:flex;align-items:center;gap:.55rem;
+  font-size:.85rem;font-weight:700;color:var(--text);
+}
+.card-title-icon{
+  width:28px;height:28px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;
+}
+.icon-blue{background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.2)}
+.icon-green{background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.2)}
+.icon-purple{background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.2)}
+.icon-cyan{background:rgba(6,182,212,.15);border:1px solid rgba(6,182,212,.2)}
+.icon-yellow{background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.2)}
+
+.cbadge{
+  font-size:.68rem;font-weight:700;
+  padding:.2rem .65rem;border-radius:20px;
+  background:var(--bg4);color:var(--muted2);
+  border:1px solid var(--border2);
+}
+.cbadge.green{background:rgba(16,185,129,.1);color:var(--green);border-color:rgba(16,185,129,.2)}
+
+/* ── Add form ── */
+.add-form{padding:1.25rem;display:flex;flex-direction:column;gap:.75rem}
+.form-row{display:flex;gap:.75rem}
+.finput{
+  flex:1;
+  background:var(--bg3);
+  border:1px solid var(--border2);
+  border-radius:9px;
+  padding:.65rem 1rem;
+  color:var(--text);
+  font-size:.875rem;
+  font-family:'Inter',sans-serif;
+  outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+.finput:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(59,130,246,.15)}
+.finput::placeholder{color:var(--muted)}
+.btn-add{
+  background:linear-gradient(135deg,#2563eb,#1d4ed8);
+  color:#fff;border:none;border-radius:9px;
+  padding:.65rem 1.4rem;
+  font-size:.85rem;font-weight:700;
+  cursor:pointer;white-space:nowrap;
+  font-family:'Inter',sans-serif;
+  transition:all .15s;
+  box-shadow:0 4px 15px rgba(37,99,235,.35);
+}
+.btn-add:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.5)}
+.btn-add:active{transform:translateY(0)}
+.btn-add:disabled{background:var(--bg4);color:var(--muted);box-shadow:none;cursor:not-allowed;transform:none}
+
+/* ── Todo list ── */
+.todo-list{list-style:none}
+.todo-item{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:.9rem 1.25rem;
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.todo-item:last-child{border-bottom:none}
+.todo-item:hover{background:rgba(255,255,255,.02)}
+
+.todo-cb{
+  width:20px;height:20px;flex-shrink:0;margin-top:2px;
+  border:2px solid var(--border2);border-radius:6px;
+  background:transparent;cursor:pointer;
+  appearance:none;-webkit-appearance:none;
+  transition:all .15s;position:relative;
+}
+.todo-cb:checked{background:var(--green);border-color:var(--green)}
+.todo-cb:checked::after{
+  content:'✓';position:absolute;
+  top:50%;left:50%;transform:translate(-50%,-50%);
+  color:#fff;font-size:11px;font-weight:800;
+}
+.todo-cb:hover:not(:checked){border-color:var(--blue)}
+
+.todo-body{flex:1;min-width:0}
+.todo-title{font-size:.9rem;font-weight:500;color:var(--text);line-height:1.4;transition:color .15s}
+.todo-title.done{text-decoration:line-through;color:var(--muted)}
+.todo-desc{font-size:.75rem;color:var(--muted);margin-top:.2rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.todo-foot{display:flex;align-items:center;gap:.5rem;margin-top:.35rem}
+.tag{
+  font-size:.65rem;font-weight:700;
+  padding:.1rem .5rem;border-radius:4px;
+  font-family:'JetBrains Mono',monospace;
+  letter-spacing:.03em;
+}
+.tag-done{background:rgba(16,185,129,.12);color:var(--green)}
+.tag-pending{background:rgba(245,158,11,.12);color:var(--yellow)}
+.todo-time{font-size:.68rem;color:var(--muted)}
+
+.todo-del{
+  background:transparent;border:none;
+  color:var(--muted);cursor:pointer;
+  padding:.3rem .45rem;border-radius:6px;
+  font-size:.85rem;transition:all .15s;flex-shrink:0;
+}
+.todo-del:hover{background:rgba(239,68,68,.12);color:var(--red)}
+
+.empty-state{
+  text-align:center;padding:3.5rem 1rem;color:var(--muted);
+}
+.empty-icon{font-size:3rem;margin-bottom:.75rem;opacity:.4}
+.empty-text{font-size:.88rem}
+
+/* ── Sidebar ── */
+.sidebar{display:flex;flex-direction:column;gap:1rem}
+
+/* ── Metrics ── */
+.metrics-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:.75rem;padding:1.1rem;
+}
+.mbox{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:10px;padding:.85rem;text-align:center;
+  transition:border-color .2s,transform .2s;
+}
+.mbox:hover{border-color:var(--border2);transform:translateY(-2px)}
+.mval{
+  font-size:1.5rem;font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  background:linear-gradient(135deg,var(--blue2),var(--cyan));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.mlbl{font-size:.65rem;color:var(--muted);margin-top:.2rem;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+
+/* ── Pipeline ── */
+.pipeline{padding:.75rem 1.25rem 1rem}
+.pstep{
+  display:flex;align-items:flex-start;gap:.85rem;
+  padding:.6rem 0;position:relative;
+}
+.pstep:not(:last-child)::after{
+  content:'';position:absolute;
+  left:13px;top:34px;bottom:-4px;
+  width:2px;background:var(--border2);
+}
+.pdot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.72rem;font-weight:800;
+  flex-shrink:0;position:relative;z-index:1;
+  transition:all .2s;
+}
+.pdot.done{background:rgba(16,185,129,.15);color:var(--green);border:2px solid rgba(16,185,129,.4)}
+.pdot.active{
+  background:rgba(59,130,246,.15);color:var(--blue2);
+  border:2px solid rgba(59,130,246,.5);
+  animation:activePulse 2s infinite;
+}
+@keyframes activePulse{0%,100%{box-shadow:0 0 0 0 rgba(59,130,246,.4)}50%{box-shadow:0 0 0 8px rgba(59,130,246,0)}}
+.pdot.pending{background:var(--bg4);color:var(--muted);border:2px solid var(--border2)}
+.pinfo{flex:1}
+.pname{font-size:.82rem;font-weight:700;color:var(--text)}
+.psub{font-size:.7rem;color:var(--muted);margin-top:.1rem}
+
+/* ── Endpoints ── */
+.ep-list{list-style:none;padding:.75rem}
+.ep-item{
+  display:flex;align-items:center;gap:.65rem;
+  padding:.55rem .75rem;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;margin-bottom:.5rem;
+  text-decoration:none;transition:all .15s;cursor:pointer;
+}
+.ep-item:last-child{margin-bottom:0}
+.ep-item:hover{border-color:var(--blue);background:var(--bg4);transform:translateX(3px)}
+.method{
+  font-size:.62rem;font-weight:800;
+  font-family:'JetBrains Mono',monospace;
+  padding:.15rem .5rem;border-radius:5px;
+  min-width:40px;text-align:center;letter-spacing:.03em;
+}
+.get{background:rgba(16,185,129,.12);color:var(--green)}
+.post{background:rgba(59,130,246,.12);color:var(--blue2)}
+.patch{background:rgba(245,158,11,.12);color:var(--yellow)}
+.delete{background:rgba(239,68,68,.12);color:var(--red)}
+.ep-path{font-size:.78rem;font-family:'JetBrains Mono',monospace;color:var(--muted2);flex:1}
+.ep-desc{font-size:.68rem;color:var(--muted)}
+
+/* ── Infra card ── */
+.infra-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:.6rem;padding:1rem;
+}
+.ibox{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:9px;padding:.75rem;
+  display:flex;align-items:center;gap:.6rem;
+  transition:all .2s;
+}
+.ibox:hover{border-color:var(--border2);transform:translateY(-2px)}
+.ibox-icon{font-size:1.2rem;flex-shrink:0}
+.ibox-name{font-size:.75rem;font-weight:700;color:var(--text)}
+.ibox-sub{font-size:.65rem;color:var(--muted);margin-top:.1rem}
+
+/* ── Toast ── */
+.toast{
+  position:fixed;bottom:1.5rem;right:1.5rem;z-index:999;
+  display:flex;align-items:center;gap:.65rem;
+  background:var(--bg2);border:1px solid var(--border2);
+  border-radius:12px;padding:.8rem 1.2rem;
+  font-size:.84rem;font-weight:600;color:var(--text);
+  box-shadow:0 16px 48px rgba(0,0,0,.5);
+  transform:translateY(24px) scale(.95);opacity:0;
+  transition:all .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+}
+.toast.show{transform:translateY(0) scale(1);opacity:1}
+.toast.success{border-color:rgba(16,185,129,.4)}
+.toast.error{border-color:rgba(239,68,68,.4)}
+
+/* ── Footer ── */
+footer{
+  text-align:center;padding:2rem 0 0;
+  color:var(--muted);font-size:.75rem;
+  border-top:1px solid var(--border);margin-top:3rem;
+  line-height:2;
+}
+footer strong{color:var(--muted2)}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-grid"></div>
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- Navbar -->
+<nav>
+  <div class="nav-inner">
+    <a class="brand" href="#">
+      <div class="brand-logo">&#x1F680;</div>
+      <div>
+        <div class="brand-text">DevOps Dashboard</div>
+        <div class="brand-sub">Octa Byte AI &mdash; Assignment</div>
+      </div>
+    </a>
+    <div class="nav-center">
+      <a class="nav-link" href="/health" target="_blank">/health</a>
+      <a class="nav-link" href="/ready" target="_blank">/ready</a>
+      <a class="nav-link" href="/info" target="_blank">/info</a>
+      <a class="nav-link" href="/metrics" target="_blank">/metrics</a>
+      <a class="nav-link" href="/todos" target="_blank">/todos</a>
+    </div>
+    <div class="live-badge"><div class="live-dot"></div> Live</div>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-chip">&#x26A1; End-to-End DevOps Assignment</div>
+    <h1>
+      <span class="w1">Production-Grade</span><br/>
+      <span class="w2">AWS EKS Platform</span>
+    </h1>
+    <p class="hero-sub">
+      A fully automated DevOps pipeline &mdash; from code commit to production deployment on Kubernetes,
+      with monitoring, logging, and secret management on AWS.
+    </p>
+    <div class="pills">
+      <div class="pill"><div class="pill-dot" style="background:#f97316"></div>Terraform IaC</div>
+      <div class="pill"><div class="pill-dot" style="background:#326ce5"></div>AWS EKS</div>
+      <div class="pill"><div class="pill-dot" style="background:#ff9900"></div>Amazon ECR</div>
+      <div class="pill"><div class="pill-dot" style="background:#2088ff"></div>GitHub Actions</div>
+      <div class="pill"><div class="pill-dot" style="background:#336791"></div>RDS PostgreSQL</div>
+      <div class="pill"><div class="pill-dot" style="background:#10b981"></div>CloudWatch</div>
+      <div class="pill"><div class="pill-dot" style="background:#e6522c"></div>Prometheus</div>
+      <div class="pill"><div class="pill-dot" style="background:#8b5cf6"></div>Secrets Manager</div>
+      <div class="pill"><div class="pill-dot" style="background:#06b6d4"></div>Fluent Bit</div>
+      <div class="pill"><div class="pill-dot" style="background:#f59e0b"></div>Kustomize</div>
+    </div>
+  </div>
+
+  <!-- Status -->
+  <div class="sec-label">System Status</div>
+  <div class="status-grid">
+    <div class="scard">
+      <div class="scard-icon">&#x1F49A;</div>
+      <div class="scard-label">Health</div>
+      <div class="scard-val loading" id="s-health">Checking&hellip;</div>
+      <div class="scard-sub" id="s-uptime">uptime: &mdash;</div>
+    </div>
+    <div class="scard">
+      <div class="scard-icon">&#x1F5C4;&#xFE0F;</div>
+      <div class="scard-label">Database</div>
+      <div class="scard-val loading" id="s-db">Checking&hellip;</div>
+      <div class="scard-sub">PostgreSQL &middot; RDS</div>
+    </div>
+    <div class="scard">
+      <div class="scard-icon">&#x1F4E6;</div>
+      <div class="scard-label">App Version</div>
+      <div class="scard-val info" id="s-version">&mdash;</div>
+      <div class="scard-sub" id="s-env">environment: &mdash;</div>
+    </div>
+    <div class="scard">
+      <div class="scard-icon">&#x1F3F7;&#xFE0F;</div>
+      <div class="scard-label">Image Tag</div>
+      <div class="scard-val info" id="s-tag">&mdash;</div>
+      <div class="scard-sub">ECR &middot; Docker</div>
+    </div>
+    <div class="scard">
+      <div class="scard-icon">&#x2699;&#xFE0F;</div>
+      <div class="scard-label">Runtime</div>
+      <div class="scard-val info" id="s-node">&mdash;</div>
+      <div class="scard-sub">Node.js</div>
+    </div>
+  </div>
+
+  <!-- Main grid -->
+  <div class="main-grid">
+    <div style="display:flex;flex-direction:column;gap:1rem">
+
+      <!-- Add task -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-blue">&#x270F;&#xFE0F;</div>
+            New Task
+          </div>
+          <span class="cbadge">REST API &middot; POST /todos</span>
+        </div>
+        <form class="add-form" id="add-form">
+          <div class="form-row">
+            <input class="finput" id="inp-title" type="text"
+              placeholder="Task title &mdash; e.g. Configure EKS node group autoscaling" required autocomplete="off"/>
+          </div>
+          <div class="form-row">
+            <input class="finput" id="inp-desc" type="text"
+              placeholder="Description (optional)" autocomplete="off"/>
+            <button class="btn-add" type="submit" id="add-btn">+ Add Task</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Task list -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-green">&#x1F4CB;</div>
+            Tasks
+          </div>
+          <span class="cbadge green" id="todo-badge">0 tasks</span>
+        </div>
+        <ul class="todo-list" id="todo-list">
+          <li><div class="empty-state">
+            <div class="empty-icon">&#x1F4ED;</div>
+            <div class="empty-text">Loading tasks&hellip;</div>
+          </div></li>
+        </ul>
+      </div>
+
+      <!-- Infrastructure -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-yellow">&#x1F3D7;&#xFE0F;</div>
+            Infrastructure Stack
+          </div>
+          <span class="cbadge">Terraform &middot; AWS</span>
+        </div>
+        <div class="infra-grid">
+          <div class="ibox"><div class="ibox-icon">&#x1F310;</div><div><div class="ibox-name">VPC</div><div class="ibox-sub">Public + Private Subnets</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x2638;&#xFE0F;</div><div><div class="ibox-name">EKS Cluster</div><div class="ibox-sub">Kubernetes 1.33 &middot; t3.micro</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x1F4E6;</div><div><div class="ibox-name">Amazon ECR</div><div class="ibox-sub">Container Registry</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x1F5C4;&#xFE0F;</div><div><div class="ibox-name">RDS PostgreSQL</div><div class="ibox-sub">Private subnet &middot; Encrypted</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x2696;&#xFE0F;</div><div><div class="ibox-name">ALB</div><div class="ibox-sub">AWS LB Controller &middot; Ingress</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x1F510;</div><div><div class="ibox-name">Secrets Manager</div><div class="ibox-sub">ESO &middot; IRSA &middot; Rotation</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x1F4CA;</div><div><div class="ibox-name">CloudWatch</div><div class="ibox-sub">Metrics &middot; Logs &middot; Alarms</div></div></div>
+          <div class="ibox"><div class="ibox-icon">&#x1F6E1;&#xFE0F;</div><div><div class="ibox-name">Security Groups</div><div class="ibox-sub">Least-privilege rules</div></div></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+      <!-- Metrics -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-cyan">&#x1F4CA;</div>
+            Live Metrics
+          </div>
+          <span class="cbadge">Prometheus &middot; /metrics</span>
+        </div>
+        <div class="metrics-grid">
+          <div class="mbox"><div class="mval" id="m-req">&mdash;</div><div class="mlbl">HTTP Requests</div></div>
+          <div class="mbox"><div class="mval" id="m-todos">&mdash;</div><div class="mlbl">Total Tasks</div></div>
+          <div class="mbox"><div class="mval" id="m-uptime">&mdash;</div><div class="mlbl">Uptime (s)</div></div>
+          <div class="mbox"><div class="mval" id="m-latency">&mdash;</div><div class="mlbl">Avg Latency</div></div>
+        </div>
+      </div>
+
+      <!-- Pipeline -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-purple">&#x2699;&#xFE0F;</div>
+            CI/CD Pipeline
+          </div>
+          <span class="cbadge">GitHub Actions</span>
+        </div>
+        <div class="pipeline">
+          <div class="pstep"><div class="pdot done">&#x2713;</div><div class="pinfo"><div class="pname">PR Checks</div><div class="psub">Jest tests &middot; ESLint &middot; npm audit</div></div></div>
+          <div class="pstep"><div class="pdot done">&#x2713;</div><div class="pinfo"><div class="pname">Security Scan</div><div class="psub">Trivy &middot; Container CVE scan</div></div></div>
+          <div class="pstep"><div class="pdot done">&#x2713;</div><div class="pinfo"><div class="pname">Build &amp; Push</div><div class="psub">Docker &rarr; Amazon ECR</div></div></div>
+          <div class="pstep"><div class="pdot active">&#x25B6;</div><div class="pinfo"><div class="pname">Deploy Staging</div><div class="psub">kubectl apply &middot; EKS rollout</div></div></div>
+          <div class="pstep"><div class="pdot pending">&#x23F8;</div><div class="pinfo"><div class="pname">Manual Approval</div><div class="psub">GitHub Environment gate</div></div></div>
+          <div class="pstep"><div class="pdot pending">&#x23F8;</div><div class="pinfo"><div class="pname">Deploy Production</div><div class="psub">Rolling update &middot; Zero downtime</div></div></div>
+        </div>
+      </div>
+
+      <!-- Endpoints -->
+      <div class="card">
+        <div class="card-head">
+          <div class="card-title">
+            <div class="card-title-icon icon-blue">&#x1F50C;</div>
+            API Endpoints
+          </div>
+        </div>
+        <ul class="ep-list">
+          <li><a class="ep-item" href="/health" target="_blank"><span class="method get">GET</span><span class="ep-path">/health</span><span class="ep-desc">K8s liveness</span></a></li>
+          <li><a class="ep-item" href="/ready" target="_blank"><span class="method get">GET</span><span class="ep-path">/ready</span><span class="ep-desc">K8s readiness</span></a></li>
+          <li><a class="ep-item" href="/info" target="_blank"><span class="method get">GET</span><span class="ep-path">/info</span><span class="ep-desc">Build metadata</span></a></li>
+          <li><a class="ep-item" href="/metrics" target="_blank"><span class="method get">GET</span><span class="ep-path">/metrics</span><span class="ep-desc">Prometheus</span></a></li>
+          <li><a class="ep-item" href="/todos" target="_blank"><span class="method get">GET</span><span class="ep-path">/todos</span><span class="ep-desc">List all tasks</span></a></li>
+          <li><a class="ep-item" href="#" onclick="return false"><span class="method post">POST</span><span class="ep-path">/todos</span><span class="ep-desc">Create task</span></a></li>
+          <li><a class="ep-item" href="#" onclick="return false"><span class="method patch">PATCH</span><span class="ep-path">/todos/:id</span><span class="ep-desc">Update task</span></a></li>
+          <li><a class="ep-item" href="#" onclick="return false"><span class="method delete">DEL</span><span class="ep-path">/todos/:id</span><span class="ep-desc">Delete task</span></a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>
+    Built for <strong>Octa Byte AI Pvt Ltd</strong> &mdash; DevOps Engineer Assignment &nbsp;&middot;&nbsp;
+    <strong>Node.js &middot; EKS &middot; ECR &middot; Terraform &middot; GitHub Actions &middot; CloudWatch &middot; RDS</strong><br/>
+    Liveness &#x2713; &nbsp; Readiness &#x2713; &nbsp; Prometheus Metrics &#x2713; &nbsp; Structured JSON Logs &#x2713; &nbsp; Graceful Shutdown &#x2713;
+  </footer>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function timeAgo(iso){const s=Math.floor((Date.now()-new Date(iso))/1000);if(s<60)return s+'s ago';if(s<3600)return Math.floor(s/60)+'m ago';if(s<86400)return Math.floor(s/3600)+'h ago';return Math.floor(s/86400)+'d ago';}
+function toast(msg,type='success'){const el=document.getElementById('toast');el.textContent=(type==='success'?'\u2713  ':'\u2717  ')+msg;el.className='toast show '+type;clearTimeout(el._t);el._t=setTimeout(()=>{el.className='toast';},3000);}
+
+async function loadStatus(){
+  try{const h=await fetch('/health').then(r=>r.json());const el=document.getElementById('s-health');el.textContent=h.status==='ok'?'\u2713  Healthy':'\u2717  Down';el.className='scard-val '+(h.status==='ok'?'ok':'err');document.getElementById('s-uptime').textContent='uptime: '+h.uptime_seconds+'s';document.getElementById('m-uptime').textContent=h.uptime_seconds;}catch{const el=document.getElementById('s-health');el.textContent='\u2717  Unreachable';el.className='scard-val err';}
+  try{const r=await fetch('/ready').then(r=>r.json());const el=document.getElementById('s-db');el.textContent=r.database==='connected'?'\u2713  Connected':'\u2717  Unreachable';el.className='scard-val '+(r.database==='connected'?'ok':'err');}catch{document.getElementById('s-db').textContent='\u2717  Error';document.getElementById('s-db').className='scard-val err';}
+  try{const i=await fetch('/info').then(r=>r.json());document.getElementById('s-version').textContent='v'+i.version;document.getElementById('s-env').textContent='environment: '+i.environment;document.getElementById('s-tag').textContent=i.image_tag;document.getElementById('s-node').textContent=i.node_version;}catch{}
+}
+
+async function loadMetrics(){
+  try{const raw=await fetch('/metrics').then(r=>r.text());const tm=raw.match(/http_requests_total\{[^}]*\}\s+([\d.]+)/g);let total=0;if(tm)tm.forEach(m=>{total+=parseFloat(m.split(' ').pop())||0;});document.getElementById('m-req').textContent=Math.round(total)||'0';const sm=raw.match(/http_request_duration_seconds_sum\{[^}]*\}\s+([\d.e+\-]+)/g);const cm=raw.match(/http_request_duration_seconds_count\{[^}]*\}\s+([\d.e+\-]+)/g);let st=0,ct=0;if(sm)sm.forEach(m=>{st+=parseFloat(m.split(' ').pop())||0;});if(cm)cm.forEach(m=>{ct+=parseFloat(m.split(' ').pop())||0;});document.getElementById('m-latency').textContent=ct>0?((st/ct)*1000).toFixed(0)+'ms':'0ms';}catch{}
+}
+
+async function loadTodos(){
+  try{const res=await fetch('/todos').then(r=>r.json());document.getElementById('todo-badge').textContent=res.count+' task'+(res.count!==1?'s':'');document.getElementById('m-todos').textContent=res.count;const list=document.getElementById('todo-list');if(res.data.length===0){list.innerHTML='<li><div class="empty-state"><div class="empty-icon">\uD83D\uDCED</div><div class="empty-text">No tasks yet \u2014 add one above!</div></div></li>';return;}list.innerHTML=res.data.map(t=>`<li class="todo-item" id="ti-${t.id}"><input class="todo-cb" type="checkbox" ${t.completed?'checked':''} onchange="toggleTodo('${t.id}',this.checked)"/><div class="todo-body"><div class="todo-title ${t.completed?'done':''}">${esc(t.title)}</div>${t.description?`<div class="todo-desc">${esc(t.description)}</div>`:''}<div class="todo-foot"><span class="tag ${t.completed?'tag-done':'tag-pending'}">${t.completed?'done':'pending'}</span><span class="todo-time">${timeAgo(t.created_at)}</span></div></div><button class="todo-del" onclick="deleteTodo('${t.id}')" title="Delete">\u2715</button></li>`).join('');}catch{toast('Failed to load tasks','error');}
+}
+
+async function addTodo(e){e.preventDefault();const title=document.getElementById('inp-title').value.trim();const desc=document.getElementById('inp-desc').value.trim();if(!title)return;const btn=document.getElementById('add-btn');btn.disabled=true;btn.textContent='Adding\u2026';try{const r=await fetch('/todos',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({title,description:desc})});if(!r.ok)throw new Error();document.getElementById('inp-title').value='';document.getElementById('inp-desc').value='';await loadTodos();toast('Task added \u2713');}catch{toast('Failed to add task','error');}finally{btn.disabled=false;btn.textContent='+ Add Task';}}
+
+async function toggleTodo(id,completed){try{await fetch('/todos/'+id,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({completed})});await loadTodos();toast(completed?'Marked as done \u2713':'Marked as pending');}catch{toast('Update failed','error');}}
+
+async function deleteTodo(id){try{await fetch('/todos/'+id,{method:'DELETE'});await loadTodos();toast('Task deleted');}catch{toast('Delete failed','error');}}
+
+document.getElementById('add-form').addEventListener('submit',addTodo);
+loadStatus(); loadTodos(); loadMetrics();
+setInterval(loadMetrics,10000); setInterval(loadStatus,30000); setInterval(loadTodos,15000);
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+# ── Secrets & credentials ─────────────────────────────────────────────────────
+.env
+.env.*
+!.env.example
+!.env.ci.example
+.env.ci
+*.pem
+*.key
+
+# ── Terraform ─────────────────────────────────────────────────────────────────
+terraform/.terraform/
+terraform/**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfplan
+tfplan
+.terraform.lock.hcl
+
+# ── Node.js ───────────────────────────────────────────────────────────────────
+app/node_modules/
+app/coverage/
+app/npm-audit.json
+
+# ── macOS ─────────────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+
+# ── Build artifacts ───────────────────────────────────────────────────────────
+*.zip
+/tmp/
+
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.pyc

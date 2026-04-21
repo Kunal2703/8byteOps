@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: production
+  labels:
+    app: devops-demo
+    environment: production
+    managed-by: terraform

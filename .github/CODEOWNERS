@@ -1,0 +1,8 @@
+# Code owners — these people are auto-requested for review on PRs
+* @Kunal2703
+
+# Terraform changes require review
+terraform/ @Kunal2703
+
+# K8s manifests require review
+k8s/ @Kunal2703

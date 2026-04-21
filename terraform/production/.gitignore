@@ -1,0 +1,31 @@
+# Terraform state files - never commit these
+*.tfstate
+*.tfstate.backup
+*.tfstate.*.backup
+
+# Terraform working directory
+.terraform/
+
+# Terraform variable files with secrets - commit terraform.tfvars.example instead
+# terraform.tfvars is intentionally NOT ignored here since it contains no secrets
+# If you add secrets to terraform.tfvars, add it to this list
+*.auto.tfvars
+
+# Crash log files
+crash.log
+crash.*.log
+
+# Override files (local developer overrides)
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Terraform plan output files (may contain sensitive data)
+*.tfplan
+
+# .terraform.lock.hcl is intentionally NOT ignored - it should be committed
+# to ensure consistent provider versions across the team
+
+# local password files
+.db_password.txt
