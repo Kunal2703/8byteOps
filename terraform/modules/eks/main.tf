@@ -71,6 +71,23 @@ module "eks" {
   # Grant the Terraform caller admin access to the cluster
   enable_cluster_creator_admin_permissions = true
 
+  # Grant GitHub Actions CI user admin access
+  access_entries = {
+    github_actions = {
+      kubernetes_groups = []
+      principal_arn     = "arn:aws:iam::283800772211:user/github-actions-ci"
+
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
   # Control plane logging
   cluster_enabled_log_types = [
     "api",

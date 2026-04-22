@@ -159,7 +159,7 @@ jobs:
     needs: [build-push]
     environment:
       name: production
-      url: http://k8s-producti-devopsde-57ff8a31b1-1229702361.us-east-1.elb.amazonaws.com
+      url: http://k8s-producti-devopsde-57ff8a31b1-358644725.us-east-1.elb.amazonaws.com
 
     steps:
       - name: Approval granted
